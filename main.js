@@ -3,7 +3,11 @@ typeSelect = document.getElementById('type')
 lenghtSelect = document.getElementById('lenght')
 countSelect = document.getElementById('count')
 noteSelect = document.getElementById('note')
-resulttext = document.getElementById('result')
+resulttext = $('#result')
+closureCheckbox = $(".closure-checkbox")
+typeCheckbox = document.getElementsByName('cbtype')[0]
+colorCheckbox = document.getElementsByName('cbcolor')[0]
+
 sum = 0
 OTHER = `
               <option value="Nature Straight (LB)">Nature Straight (LB)</option>
@@ -24,8 +28,10 @@ CLOSURE = `
           <option value="13X6">13X6</option>
           `;
 
-function getPrice(description, type, lenght, count, note) {
-    price = 0;
+function getPrice(description, type, lenght, count, note, cbtype = false, cbcolor = false) {
+    let price = 0;
+    let bonusType = 0;
+    let bonusColor = 0;
     switch (description) {
         case 'DOUBLE DRAWN':
             switch (type) {
@@ -1013,7 +1019,17 @@ function getPrice(description, type, lenght, count, note) {
             break;
     }
 
+    if (cbtype == true) {
+        bonusType = 1 * count;
+
+    }
+    if (cbcolor == true) {
+        bonusColor = 1 * count;
+    }
+
     price *= count;
+    console.log("type: " + bonusType);
+    price = price + bonusType + bonusColor
     return price;
 }
 
@@ -1021,20 +1037,21 @@ function getSum(type, getPrice = 0) {
 
     if (type == 'add') {
         sum += getPrice;
-        resulttext.innerText = `Result: ${sum} USD`;
-
+        text = `Result: ${sum} USD`;
+        $('#result').text(text)
     }
 
     if (type == 'remove') {
         sum -= getPrice;
-
-        resulttext.innerText = `Result: ${sum} USD`;
+        text = `Result: ${sum} USD`;
+        $('#result').text(text)
     }
 }
 
 function add() {
+
     body = document.getElementById('body');
-    price = getPrice(descriptionSelect.value, typeSelect.value, lenghtSelect.value, countSelect.value, noteSelect.value)
+    price = getPrice(descriptionSelect.value, typeSelect.value, lenghtSelect.value, countSelect.value, noteSelect.value, typeCheckbox.checked, colorCheckbox.checked)
     getSum('add', price)
     row = body.insertRow(0);
     row.id = countRow();
@@ -1042,13 +1059,14 @@ function add() {
     row.insertCell(1).innerHTML = `<td>${typeSelect.value}</td>`;
     row.insertCell(2).innerHTML = `<td>${lenghtSelect.value}</td>`;
     row.insertCell(3).innerHTML = `<td>${countSelect.value}</td>`;
-    row.insertCell(4).innerHTML = `<td>${getPrice(descriptionSelect.value,typeSelect.value,lenghtSelect.value,countSelect.value,noteSelect.value)}</td>`;
+    row.insertCell(4).innerHTML = `<td>${price}</td>`;
     row.insertCell(5).innerHTML = ` <td>${noteSelect.value}</td>`;
     // row.insertCell(5).setAttribute('contenteditable', 'true');
     row.insertCell(6).innerHTML = `<td>
     <button type="button" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></button>
     <button type="button" class="btn btn-danger" onclick="remove(${countRow()}), getSum('remove', ${price})"><i class="fa-solid fa-trash-can"></i></button>
 </td>`;
+
 }
 
 
@@ -1063,8 +1081,12 @@ function remove(id) {
 function getType(description) {
     type = document.getElementById("type")
     if (description.value == "CLOSURE") {
+        closureCheckbox.show();
         type.innerHTML = CLOSURE
     } else {
+        closureCheckbox.hide();
+        colorCheckbox.checked = false;
+        typeCheckbox.checked = false;
         type.innerHTML = OTHER
     }
 }

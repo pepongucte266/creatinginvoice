@@ -12,3 +12,12 @@
     margin-right: 100px;
     margin-bottom: 50px;
 }
+
+.closure-checkbox {
+    display: none;
+    margin-left: 20px;
+}
+
+.closure-checkbox label {
+    margin-left: 20px;
+}
