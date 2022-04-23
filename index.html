@@ -29,27 +29,35 @@
 
 
 <body>
-    <!-- <div class="root">
+    <div class="container-fluid">
         <h1>Creating Invoice</h1>
-        <div class="form">
-            <div class="form-row">
-                <label for="description">DESCRIPTION</label>
-                <select name="description" id="description" onchange="getType(this)">
+        <div class="group">
+            <div class="form">
+                <div class="form-row">
+                    <label for="description">DESCRIPTION</label>
+                    <select name="description" id="description" onchange="getType(this)">
                   <option selected>Open this select menu</option>
                   <option value="DOUBLE DRAWN">DOUBLE DRAWN</option>
                   <option value="SUPPER DOUBLE DRAWN">SUPPER DOUBLE DRAWN</option>
                   <option value="SINGLE DRAWN">SINGLE DRAWN</option>
                   <option value="CLOSURE">CLOSURE</option>
                 </select>
-            </div>
-            <div class="form-row">
-                <label for="type">TYPE</label>
-                <select name="type" id="type">
+                </div>
+                <div class="form-row">
+                    <label for="type">TYPE</label>
+                    <select name="type" id="type">
                 </select>
-            </div>
-            <div class="form-row">
-                <label for="lenght">LENGHT</label>
-                <select name="lenght" id="lenght" onchange="getType(this)">
+
+                    <div class="closure-checkbox">
+                        <label for="cbtype">type</label>
+                        <input type="checkbox" name="cbtype" id="">
+                        <label for="cbcolor">color</label>
+                        <input type="checkbox" name="cbcolor" id="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label for="lenght">LENGHT</label>
+                    <select name="lenght" id="lenght">
                   <option value="6">6</option>
                   <option value="8">8</option>
                   <option value="10">10</option>
@@ -65,100 +73,34 @@
                   <option value="30">30</option>
                   <option value="32">32</option>
                 </select> inches
-            </div>
-            <div class="form-row">
-                <label for="count">COUNT</label>
-                <input type="number" name="count" id="count" value="1">
-            </div>
-            <div class="form-row">
-                <label for="note">NOTE</label>
-                <input type="text" name="note" id="note">
-            </div>
-            <div class="form-row">
-                <input type="button" id="add" onclick="add()" value="ADD">
-            </div>
-        </div>
-
-        <div class="sheet">
-            <table id="table" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">DESCRIPTION</th>
-                        <th scope="col">TYPE</th>
-                        <th scope="col">LENGHT</th>
-                        <th scope="col">COUNT</th>
-                        <th scope="col">PRICE (USD)</th>
-                        <th scope="col">NOTE</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="body">
-                    <tr>
-                        <td colspan="6" id="result" style="text-align: center">PRICE: 100</td>
-                    </tr>
-                </tbody>
-            </table>
-            <input id="btnExport" type="button" onclick="exportToExcel()" value="Export to excel">
-        </div>
-    </div> -->
-    <div class="container-fluid">
-
-        <h1>Creating Invoice</h1>
-        <div class="form">
-            <div class="form-row">
-                <label for="description">DESCRIPTION</label>
-                <select name="description" id="description" onchange="getType(this)">
-                  <option selected>Open this select menu</option>
-                  <option value="DOUBLE DRAWN">DOUBLE DRAWN</option>
-                  <option value="SUPPER DOUBLE DRAWN">SUPPER DOUBLE DRAWN</option>
-                  <option value="SINGLE DRAWN">SINGLE DRAWN</option>
-                  <option value="CLOSURE">CLOSURE</option>
-                </select>
-            </div>
-            <div class="form-row">
-                <label for="type">TYPE</label>
-                <select name="type" id="type">
-                </select>
-
-                <div class="closure-checkbox">
-                    <label for="cbtype">type</label>
-                    <input type="checkbox" name="cbtype" id="">
-                    <label for="cbcolor">color</label>
-                    <input type="checkbox" name="cbcolor" id="">
+                </div>
+                <div class="form-row">
+                    <label for="count">COUNT</label>
+                    <input type="number" name="count" id="count" value="1">
+                </div>
+                <div class="form-row">
+                    <label for="note">NOTE</label>
+                    <input type="text" name="note" id="note">
+                </div>
+                <div class="form-row">
+                    <input type="button" id="add" onclick="add()" value="ADD">
                 </div>
             </div>
-            <div class="form-row">
-                <label for="lenght">LENGHT</label>
-                <select name="lenght" id="lenght">
-                  <option value="6">6</option>
-                  <option value="8">8</option>
-                  <option value="10">10</option>
-                  <option value="12">12</option>
-                  <option value="14">14</option>
-                  <option value="16">16</option>
-                  <option value="18">18</option>
-                  <option value="20">20</option>
-                  <option value="22">22</option>
-                  <option value="24">24</option>
-                  <option value="26">26</option>
-                  <option value="28">28</option>
-                  <option value="30">30</option>
-                  <option value="32">32</option>
-                </select> inches
-            </div>
-            <div class="form-row">
-                <label for="count">COUNT</label>
-                <input type="number" name="count" id="count" value="1">
-            </div>
-            <div class="form-row">
-                <label for="note">NOTE</label>
-                <input type="text" name="note" id="note">
-            </div>
-            <div class="form-row">
-                <input type="button" id="add" onclick="add()" value="ADD">
+            <div class="form">
+                <div class="form-row">
+                    <label for="shipping">shipping fee</label>
+                    <input type="text" name="shipping" id="" value="0">
+                </div>
+                <div class="form-row">
+                    <label for="discount">discount</label>
+                    <input type="checkbox" onchange="discount(this)" name="discount" id="">
+                    <input type="text" name="discount" disabled id="discount" value="0">
+                </div>
+                <div class="form-row">
+                    <button onclick="render()" type="button"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+                </div>
             </div>
         </div>
-
         <table id="table" class="table table-striped" data-toggle="table" data-show-export="true" data-export-types="['excel','xlsx','pdf', 'csv', 'txt']">
             <thead>
                 <tr>
@@ -173,7 +115,28 @@
             </thead>
             <tbody id="body">
                 <tr>
-                    <td colspan="6" id="result" style="text-align: center">PRICE: 100</td>
+                    <td colspan="4" style="text-align: center">Subtotal</td>
+                    <td id="subtotal" class="subtotal" style="text-align: center">0</td>
+                    <td style="text-align: center"></td>
+                    <td style="text-align: center"></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: center">Shipping fee</td>
+                    <td id="shippingfee" class="shippingfee" style="text-align: center">0</td>
+                    <td style="text-align: center"></td>
+                    <td style="text-align: center"></td>
+                </tr>
+                <tr>
+                    <td colspan="4" id="discountfee" style="text-align: center">Discount</td>
+                    <td class="discountfee" style="text-align: center">0</td>
+                    <td style="text-align: center"></td>
+                    <td style="text-align: center"></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: center">Total</td>
+                    <td id="total" class="total" style="text-align: center">0</td>
+                    <td style="text-align: center"></td>
+                    <td style="text-align: center"></td>
                 </tr>
             </tbody>
         </table>

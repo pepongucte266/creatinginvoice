@@ -3,12 +3,11 @@ typeSelect = document.getElementById('type')
 lenghtSelect = document.getElementById('lenght')
 countSelect = document.getElementById('count')
 noteSelect = document.getElementById('note')
-resulttext = $('#result')
 closureCheckbox = $(".closure-checkbox")
 typeCheckbox = document.getElementsByName('cbtype')[0]
 colorCheckbox = document.getElementsByName('cbcolor')[0]
-
 sum = 0
+var checkDiscount = false;
 OTHER = `
               <option value="Nature Straight (LB)">Nature Straight (LB)</option>
               <option value="Nature Straight (Color)">Nature Straight (Color)</option>
@@ -1028,54 +1027,8 @@ function getPrice(description, type, lenght, count, note, cbtype = false, cbcolo
     }
 
     price *= count;
-    console.log("type: " + bonusType);
     price = price + bonusType + bonusColor
     return price;
-}
-
-function getSum(type, getPrice = 0) {
-
-    if (type == 'add') {
-        sum += getPrice;
-        text = `Result: ${sum} USD`;
-        $('#result').text(text)
-    }
-
-    if (type == 'remove') {
-        sum -= getPrice;
-        text = `Result: ${sum} USD`;
-        $('#result').text(text)
-    }
-}
-
-function add() {
-
-    body = document.getElementById('body');
-    price = getPrice(descriptionSelect.value, typeSelect.value, lenghtSelect.value, countSelect.value, noteSelect.value, typeCheckbox.checked, colorCheckbox.checked)
-    getSum('add', price)
-    row = body.insertRow(0);
-    row.id = countRow();
-    row.insertCell(0).innerHTML = `<td>${descriptionSelect.value}</td>`;
-    row.insertCell(1).innerHTML = `<td>${typeSelect.value}</td>`;
-    row.insertCell(2).innerHTML = `<td>${lenghtSelect.value}</td>`;
-    row.insertCell(3).innerHTML = `<td>${countSelect.value}</td>`;
-    row.insertCell(4).innerHTML = `<td>${price}</td>`;
-    row.insertCell(5).innerHTML = ` <td>${noteSelect.value}</td>`;
-    // row.insertCell(5).setAttribute('contenteditable', 'true');
-    row.insertCell(6).innerHTML = `<td>
-    <button type="button" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></button>
-    <button type="button" class="btn btn-danger" onclick="remove(${countRow()}), getSum('remove', ${price})"><i class="fa-solid fa-trash-can"></i></button>
-</td>`;
-
-}
-
-
-function countRow() {
-    return document.getElementById('body').childElementCount;
-}
-
-function remove(id) {
-    document.getElementById(id).remove();
 }
 
 function getType(description) {
@@ -1088,5 +1041,69 @@ function getType(description) {
         colorCheckbox.checked = false;
         typeCheckbox.checked = false;
         type.innerHTML = OTHER
+    }
+}
+
+function compute() {
+    var cellprices = document.getElementsByClassName('cellprice');
+    let shippingfee = document.getElementById('shippingfee');
+    let discountfee = document.getElementsByClassName('discountfee')[0];
+    let prices = [];
+    cellprices.forEach(price => prices.push(price.innerHTML))
+    let subtotal = prices.reduce((total, price) => {
+        return Number(total) + Number(price);
+    }, shippingfee.innerHTML)
+
+    $("#subtotal").text(subtotal - shippingfee.innerHTML)
+    return checkDiscount ? subtotal - discountfee.innerHTML : subtotal
+}
+
+function render() {
+    $("#shippingfee").text($("input[name='shipping']").val())
+    checkDiscount ? $(".discountfee").text($("#discount").val()) : $(".discountfee").text("0")
+    $('#total').text(compute())
+}
+
+function add() {
+    body = document.getElementById('body');
+    price = getPrice(descriptionSelect.value, typeSelect.value, lenghtSelect.value, countSelect.value, noteSelect.value, typeCheckbox.checked, colorCheckbox.checked)
+    row = body.insertRow(0);
+    row.id = countRow();
+    row.insertCell(0).innerHTML = `<td>${descriptionSelect.value}</td>`;
+    row.insertCell(1).innerHTML = `<td>${typeSelect.value}</td>`;
+    row.insertCell(2).innerHTML = `<td>${lenghtSelect.value}</td>`;
+    row.insertCell(3).innerHTML = `<td>${countSelect.value}</td>`;
+    cell4 = row.insertCell(4)
+    cell4.innerHTML = `<td>${price}</td>`;
+    cell4.setAttribute('class', 'cellprice');
+    cell5 = row.insertCell(5)
+    cell5.innerHTML = ` <td>${noteSelect.value}</td>`;
+    cell5.setAttribute('contenteditable', 'true')
+    row.insertCell(6).innerHTML = `<td>
+    <button type="button" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></button>
+    <button type="button" class="btn btn-danger" onclick="remove(${countRow()})"><i class="fa-solid fa-trash-can"></i></button>
+</td>`;
+    render()
+}
+
+
+function countRow() {
+    return document.getElementById('body').childElementCount;
+}
+
+function remove(id) {
+    document.getElementById(id).remove();
+    render()
+}
+
+
+
+function discount(checkbox) {
+    if (checkbox.checked) {
+        $('#discount').removeAttr('disabled');
+        checkDiscount = true;
+    } else {
+        $('#discount').attr('disabled', true);
+        checkDiscount = false;
     }
 }
